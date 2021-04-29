@@ -1,0 +1,84 @@
+body {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	margin: 0px;
+}
+nav.navbar {
+	position: relative;
+	background-color: #e0ebf5;
+	border-bottom: solid 1px #d1e1f0;
+	margin-bottom: 20px;
+}
+div.navbutton {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 28px;
+	font-weight: bold;
+}
+div.container {
+	max-width: 800px;
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-right: auto;
+	margin-left: auto;
+}
+h1, h2, h3 {
+	font-weight: 500;
+	margin-top: 20px;
+	margin-bottom: 15px;
+}
+h1 { font-size: 30px; }
+h2 { font-size: 24px; }
+h3 { font-size: 20px; }
+
+dl { line-height: 150%; }
+dd { margin-left: 0; }
+
+ul, ol { padding-left: 15px; list-style-position: inside; }
+li     { margin: 8px 0; line-height: 150%; }
+
+table  { text-align: left; }
+td, tr { padding: 2px 10px 2px 0; font-size: 14px; }
+
+pre, code {
+	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+	font-size: 13px;
+}
+pre {
+	background-color: #eee;
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 15px 10px;
+	overflow: auto;
+	line-height: 140%;
+	tab-size: 20px;
+}
+
+p                { line-height: 150%; }
+a                { color: #375eab; text-decoration: none; white-space: nowrap; }
+a:hover          { border-bottom: solid 1px #375eab; }
+p a, pre a, ul a { border-bottom: solid 1px #dae0ec; }
+
+pre .comment         { color: #060; }
+pre .comment a       { color: #130; border-bottom: solid 1px #bca; }
+pre .comment a:hover { border-bottom: solid 1px #130; }
+
+.indent { margin-left: 20px; }
+
+.example {
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	margin: 10px 10px;
+	box-shadow: 0px 1px 2px #eee;
+}
+.example-header   { padding: 10px; }
+.example-body {
+	display: none;
+	border-top: solid 1px #ccc;
+	padding: 0 10px 10px 10px;
+}
+
+.Documentation-idLink {
+	display: none; /* TODO: Show permalink when hovered over. */
+}

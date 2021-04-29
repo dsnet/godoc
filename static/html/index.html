@@ -1,0 +1,201 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>{{.Name}} - GoDoc</title>
+	<link rel="stylesheet" href="/style.css">
+	<link rel="icon" href="/favicon.ico" />
+</head>
+
+{{- define "example" -}}
+{{- range . -}}
+<div id="example-{{safe_id .Name}}" class="example">{{"\n" -}}
+	<div class="example-header">{{"\n" -}}
+		{{- $suffix := ternary .Suffix (printf " (%s)" .Suffix) "" -}}
+		<a href="#example-{{.Name}}">Example{{$suffix}}</a>{{"\n" -}}
+	</div>{{"\n" -}}
+	<div class="example-body">{{"\n" -}}
+		{{- if .Doc -}}{{render_doc .Doc}}{{"\n" -}}{{- end -}}
+		<p>Code:</p>{{"\n" -}}
+		{{render_code .Example}}{{"\n" -}}
+		{{- if (or .Output .EmptyOutput) -}}
+		<p>{{ternary .Unordered "Unordered output:" "Output:"}}</p>{{"\n" -}}
+		<pre>{{"\n"}}{{.Output}}</pre>{{"\n" -}}
+		{{- end -}}
+	</div>{{"\n" -}}
+</div>{{"\n" -}}
+{{"\n"}}
+{{- end -}}
+{{- end -}}
+
+<body>
+	<nav class="navbar">
+		<div class="container">
+			<div class="navbutton"><a href="/">GoDoc</a></div>
+		</div>
+	</nav>
+	<div class="container">
+		{{"\n"}}
+		{{- if .Package -}}
+		<h1>Package {{.Name}}</h1>{{"\n" -}}
+		<code class="indent">import "{{.ImportPath}}"</code>{{"\n" -}}
+		<dl class="indent">{{"\n" -}}
+			<dd><a href="#pkg-overview">Overview</a></dd>{{"\n" -}}
+			{{- if or .Consts .Vars .Funcs .Types -}}
+			<dd><a href="#pkg-index">Index</a></dd>{{"\n" -}}
+			{{- end -}}
+			{{- if .Examples.List -}}
+			<dd><a href="#pkg-examples">Examples</a></dd>{{"\n" -}}
+			{{- end -}}
+			{{- if or .Consts .Vars .Funcs .Types -}}
+			<dd><a href="#pkg-documentation">Documentation</a></dd>{{"\n" -}}
+			{{- end -}}
+			{{- if .SubDirs -}}
+			<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>{{"\n" -}}
+			{{- end -}}
+		</dl>{{"\n" -}}
+
+		<h2 id="pkg-overview">Overview <a class="Documentation-idLink" href="#pkg-overview">¶</a></h2>{{"\n\n" -}}
+		{{render_doc .Doc}}{{"\n" -}}
+		{{- template "example" (index $.Examples.Map "") -}}
+
+		{{- if or .Consts .Vars .Funcs .Types -}}
+		<h2 id="pkg-index">Index <a class="Documentation-idLink" href="#pkg-index">¶</a></h2>{{"\n\n" -}}
+		<dl class="indent">{{"\n" -}}
+			{{- if .Consts -}}<dd><a href="#pkg-constants">Constants</a></dd>{{"\n"}}{{- end -}}
+			{{- if .Vars -}}<dd><a href="#pkg-variables">Variables</a></dd>{{"\n"}}{{- end -}}
+			{{- range .Funcs -}}<dd><a href="#{{.Name}}">{{render_synopsis .Decl}}</a></dd>{{"\n"}}{{- end -}}
+			{{- range .Types -}}
+			{{- $tname := .Name -}}
+			<dd><a href="#{{$tname}}">type {{$tname}}</a></dd>{{"\n"}}
+			{{- range .Funcs -}}
+			<dd class="indent"><a href="#{{.Name}}">{{render_synopsis .Decl}}</a></dd>{{"\n"}}
+			{{- end -}}
+			{{- range .Methods -}}
+			<dd class="indent"><a href="#{{$tname}}.{{.Name}}">{{render_synopsis .Decl}}</a></dd>{{"\n"}}
+			{{- end -}}
+			{{- end -}}
+		</dl>{{"\n" -}}
+		{{- if .Examples.List -}}
+		<h3 id="pkg-examples">Examples <a class="Documentation-idLink" href="#pkg-examples">¶</a></h3>{{"\n" -}}
+		<dl class="indent">{{"\n" -}}
+			{{- range .Examples.List -}}
+			{{- $suffix := ternary .Suffix (printf " (%s)" .Suffix) "" -}}
+			<dd><a href="#example-{{.Name}}">{{or .ParentID "Package"}}{{$suffix}}</a></dd>{{"\n" -}}
+			{{- end -}}
+		</dl>{{"\n" -}}
+		{{- end -}}
+
+		<h2 id="pkg-documentation">Documentation <a class="Documentation-idLink" href="#pkg-documentation">¶</a></h2>
+		{{"\n\n"}}
+		{{- if .Consts -}}<h3 id="pkg-constants">Constants <a class="Documentation-idLink" href="#pkg-constants">¶</a>
+		</h3>{{"\n"}}{{- end -}}
+		{{- range .Consts -}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+			{{- $out.Decl -}}
+			</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- end -}}
+
+		{{- if .Vars -}}<h3 id="pkg-variables">Variables <a class="Documentation-idLink" href="#pkg-variables">¶</a>
+		</h3>{{"\n"}}{{- end -}}
+		{{- range .Vars -}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+			{{- $out.Decl -}}
+			</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- end -}}
+
+		{{- range .Funcs -}}
+		<h3 id="{{safe_id .Name}}">func {{.Name}} <a class="Documentation-idLink" href="#{{safe_id .Name}}">¶</a></h3>
+		{{"\n"}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+			{{- $out.Decl -}}
+			</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- template "example" (index $.Examples.Map .Name) -}}
+		{{- end -}}
+
+		{{- range .Types -}}
+		{{- $tname := .Name -}}
+		<h3 id="{{safe_id .Name}}">type {{.Name}} <a class="Documentation-idLink" href="#{{safe_id .Name}}">¶</a></h3>
+		{{"\n"}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+			{{- $out.Decl -}}
+			</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- template "example" (index $.Examples.Map .Name) -}}
+
+		{{- range .Consts -}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+				{{- $out.Decl -}}
+				</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- end -}}
+
+		{{- range .Vars -}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+				{{- $out.Decl -}}
+				</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- end -}}
+
+		{{- range .Funcs -}}
+		<h3 id="{{safe_id .Name}}">func {{.Name}} <a class="Documentation-idLink" href="#{{safe_id .Name}}">¶</a></h3>
+		{{"\n"}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+				{{- $out.Decl -}}
+				</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- template "example" (index $.Examples.Map .Name) -}}
+		{{- end -}}
+
+		{{- range .Methods -}}
+		{{- $name := (printf "%s.%s" $tname .Name) -}}
+		<h3 id="{{safe_id $name}}">func {{$name}} <a class="Documentation-idLink" href="#{{safe_id $name}}">¶</a></h3>
+		{{"\n"}}
+		{{- $out := render_decl .Doc .Decl -}}
+		<pre>
+				{{- $out.Decl -}}
+				</pre>
+		{{- $out.Doc -}}
+		{{"\n"}}
+		{{- template "example" (index $.Examples.Map $name) -}}
+		{{- end -}}
+		{{- end -}}
+		{{- end -}}
+		{{- else -}}
+		<h1>Directory {{.Name}}</h1>{{"\n" -}}
+		{{- end -}}
+		{{- if .SubDirs -}}
+		<h2 id="pkg-subdirectories">Subdirectories <a class="Documentation-idLink" href="#pkg-subdirectories">¶</a></h2>
+		{{"\n\n" -}}
+		<dl class="indent">{{"\n" -}}
+			{{- range .SubDirs -}}
+			{{- if $.ImpPath -}}
+			<dd><a href="/{{$.ImpPath}}/{{.}}">{{.}}</a></dd>
+			{{- else -}}
+			<dd><a href="/{{.}}">{{.}}</a></dd>
+			{{- end -}}
+			{{- end -}}
+		</dl>{{"\n" -}}
+		{{- end -}}
+		<script src="/code.js"></script>
+	</div>
+</body>
+
+</hmtl>
