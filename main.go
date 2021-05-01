@@ -17,9 +17,6 @@ import (
 	"strings"
 )
 
-var pl = fmt.Println
-var pf = fmt.Printf
-
 func main() {
 	log.SetFlags(log.Lshortfile | log.Ltime)
 	experiments := flag.String("experiments", "", "A comma separated list of experimental features (e.g., \"sections,hotlinks,lists\").\n\n"+
