@@ -58,5 +58,5 @@ The `godoc` tool can be run in one of two modes:
 
     The example above emits a TAR archive to stdout,
     which we immediately extract into some output directory.
-    Afterwards, we change the working directory that output directory and
+    Afterwards, we change the working directory into the output directory and
     use Python's SimpleHTTPServer module to serve the statically generated files.
